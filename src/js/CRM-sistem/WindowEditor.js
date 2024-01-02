@@ -121,6 +121,32 @@ export default class WindowEdit {
     return td;
   }
 
+  drawValuesTable(object) {
+    // Отрисовывает содержимое объекта в таблицу
+    const table = this.conteiner.querySelector('.conteiner-table');
+    const array = Array.from(table.children);
+    array.forEach((item, index) => {
+      if (index === 0) return;
+      item.remove();
+    });
+    for (const item of Object.entries(object)) {
+      console.log(item);
+      const tr = document.createElement('tr');
+      table.append(tr);
+
+      const tdTitle = document.createElement('td');
+      tdTitle.textContent = item[0];
+      tr.append(tdTitle);
+  
+      const tdPrice = document.createElement('td');
+      tdPrice.textContent = item[1];
+      tr.append(tdPrice);
+  
+      const tdActions = this.addActions();
+      tr.append(tdActions);
+    }
+  }
+
   onClickCross(event) {
     event.preventDefault();
     this.crossListeners.forEach((o) => o.call(null));

@@ -2,6 +2,7 @@ export default class EditController {
   constructor(editor) {
     this.edit = editor;
     this.statusChange = false;
+    this.data = {};
   }
 
   init() {
@@ -25,20 +26,10 @@ export default class EditController {
       this.statusChange = false;
       this.edit.cellTable = null;
     } else {
-      const tr = document.createElement('tr');
-      table.append(tr);
-
-      const tdTitle = document.createElement('td');
-      tdTitle.textContent = this.edit.inputTitle.value;
-      tr.append(tdTitle);
-  
-      const tdPrice = document.createElement('td');
-      tdPrice.textContent = this.edit.inputPrice.value;
-      tr.append(tdPrice);
-  
-      const tdActions = this.edit.addActions();
-      tr.append(tdActions);
+      this.data[this.edit.inputTitle.value] = this.edit.inputPrice.value;
+      this.edit.drawValuesTable(this.data);
     }
+    console.log(this.data);
     this.onClickCancel();
   }
 
