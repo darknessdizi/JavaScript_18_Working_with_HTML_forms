@@ -11,6 +11,7 @@ export default class EditController {
     this.edit.addSaveListeners(this.onClickSave.bind(this));
     this.edit.addCancelListeners(this.onClickCancel.bind(this));
     this.edit.addIconEditListeners(this.onIconEdit.bind(this));
+    this.edit.addIconDeleteListeners(this.onIconDelete.bind(this));
   }
 
   onClickCross() {
@@ -43,5 +44,13 @@ export default class EditController {
     this.edit.inputTitle.value = this.edit.cellTable.children[0].textContent;
     this.edit.inputPrice.value = this.edit.cellTable.children[1].textContent;
     this.statusChange = true;
+  }
+
+  onIconDelete(event) {
+    // Callback - Удаление строки таблицы при нажатии иконки удаления
+    const div = event.target.closest('tr');
+    const key = div.children[0].textContent;
+    delete this.data[key];
+    this.edit.drawValuesTable(this.data);
   }
 }

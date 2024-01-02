@@ -185,9 +185,12 @@ export default class WindowEdit {
   }
 
   onClickIconDelete(event) {
-    // Удаляет строку таблицы нажатой иконки
-    const div = event.target.closest('tr');
-    div.remove();
+    // Вызывает callback при нажатии иконки delete
+    this.iconDeleteListeners.forEach((o) => o.call(null, event));
+  }
+
+  addIconDeleteListeners(callback) {
+    this.iconDeleteListeners.push(callback);
   }
 
   // _createButton(mainBlock) {
