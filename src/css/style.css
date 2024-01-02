@@ -1,0 +1,262 @@
+/* ------------ Общие параметры: ------------ */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f6f8f9;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.link__task {
+  font-size: 2em;
+  text-decoration: none;
+  line-height: 4em;
+  padding: 5px;
+  border: 2px solid black;
+  background-color: aquamarine;
+}
+
+.link__task:nth-child(1n + 2) {
+  margin-top: 15px;
+}
+
+.link__task:hover {
+  background-color:chartreuse;
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.btn-return {
+  display: block;
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 2em;
+  padding: 15px;
+  background-color: aquamarine;
+  border-radius: 50%;
+}
+
+button:hover {
+  background-color:chartreuse;
+}
+
+/* ------------ CSS для задачи 1: ------------ */
+body.task-1 {
+  margin: 0;
+  padding: 10% 50px;
+  background-color:  darkkhaki;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.conteiner {
+  display: block;
+  margin-top: 30%;
+}
+
+.test1 {
+  text-align: right;
+}
+ 
+.test2 {
+  text-align: center;
+}
+ 
+.test3 {
+  text-align: left;
+}
+
+.button-popover {
+  background-color: rgb(247, 86, 118);
+  border-radius: 5px;
+  border: none;
+  color: white;
+  padding: 5px;
+  font-size: 1em;
+  position: relative;
+}
+
+.button-popover:hover {
+  background-color: rgb(212, 69, 97);
+}
+
+.conteiner-popover {
+  background-color: #f6f8f9;
+  width: 210px;
+  border: 1px solid grey;
+  border-radius: 10px;
+  position: absolute;
+  color: black;
+}
+
+.popover-title {
+  margin: 0px;
+  padding: 5px 10px;
+  font-size: 1em;
+  text-align: start;
+  background: lightgrey;
+  border-bottom: 1px solid grey;
+  border-radius: 9px 9px 0 0;
+}
+
+.popover-text {
+  margin: 10px;
+  font-size: 0.7em;
+  text-align: start;
+}
+
+.arrow {
+  position: absolute;
+  bottom: calc((0.5rem + 1px) * -1);
+  width: 1rem;
+  height: 0.5rem;
+  margin: 0 0.3rem;
+}
+
+.arrow::after,
+.arrow::before {
+  position: absolute;
+  display: block;
+  border-style: solid;
+  border-color: transparent;
+  content: '';
+}
+
+.arrow::before {
+  bottom: 0;
+  border-width: 0.5rem 0.5rem 0;
+  border-top-color: grey;
+}
+
+.arrow::after {
+  bottom: 1px;
+  border-width: 0.5rem 0.5rem 0;
+  border-top-color: #ffffff;
+}
+
+/* ------------ CSS для задачи 2: ------------ */
+.conteiner-crm {
+ background-color: aquamarine;
+ padding: 10px;
+ max-width: 60%;
+}
+
+.conteiner-crm-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.crm_title__add {
+  cursor: pointer;
+  width: 20px;
+  text-align: center;
+}
+
+.conteiner-table {
+  font-size: 1em;
+  border: 1px solid black;
+  width: 100%;
+  text-align: left;
+  table-layout: fixed;
+}
+
+th {
+  padding-left: 10px;
+}
+
+.conteiner-table th:nth-child(1) {
+  width: 50%;
+}
+
+.conteiner-table th:nth-child(3) {
+  width: 20%;
+}
+
+ td {
+  padding-left: 10px;
+  word-wrap: break-word;
+}
+
+.actions-edit {
+  width: 1em;
+  height: 1em;
+  margin-top: 0.5em;
+  display: inline-block;
+  background-image: url('../img/pencil.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.actions-delete {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  background-image: url('../img/cross.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: url('../img/delete.png') 15 15, pointer;
+}
+
+.conteiner-popup {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.conteiner-form {
+  min-width: 50%;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px 10px;
+}
+
+.popup-form {
+  display: flex;
+  flex-direction: column;
+  font-size: 1em;
+}
+
+.popup-form h3 {
+  margin: 0;
+}
+
+.popup-form input {
+  flex-grow: 1;
+  border-radius: 15px;
+  padding: 5px 10px;
+  border: 1px solid black;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: end;
+}
+
+.popup-buttons button {
+  width: 40%;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid black;
+}
+ 
