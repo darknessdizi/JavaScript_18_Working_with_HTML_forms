@@ -60,7 +60,7 @@ body.task-1 {
 
 .conteiner {
   display: block;
-  margin-top: 30%;
+  margin-top: 20%;
 }
 
 .test1 {
@@ -175,7 +175,7 @@ th {
 }
 
 .conteiner-table th:nth-child(1) {
-  width: 50%;
+  width: 45%;
 }
 
 .conteiner-table th:nth-child(3) {
@@ -210,7 +210,7 @@ th {
   cursor: url('../img/delete.png') 15 15, pointer;
 }
 
-.conteiner-popup {
+.background-popup {
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   position: absolute;
@@ -222,8 +222,34 @@ th {
   align-items: center;
 }
 
-.conteiner-form {
-  min-width: 50%;
+.popup-delete {
+  width: 30%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: azure;
+  position: relative;
+}
+
+.popup-delete__cross {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  background-image: url('../img/cross.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  top: 0;
+  right: 0;
+}
+
+.popup-delete__cross:hover {
+  background-image: url('../img/delete.png');
+}
+
+.conteiner-popup {
+  min-width: 40%;
   background-color: white;
   border: 1px solid black;
   padding: 10px 10px;
@@ -258,5 +284,16 @@ th {
   margin-left: 10px;
   padding: 5px;
   border: 1px solid black;
+}
+
+.form-error {
+  position: absolute;
+  padding: 5px 10px;
+  width: 200px;
+  background: #fff;
+  box-shadow: 0 5px 20px 0 rgba(250, 0, 0, 0.5);
+  z-index: 999;
+  border: 1px solid black;
+  color: red;
 }
  

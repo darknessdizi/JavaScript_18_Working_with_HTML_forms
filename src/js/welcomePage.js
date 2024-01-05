@@ -2,6 +2,10 @@ import WidgetPopover from './widget/WidgetPopover';
 import WindowEdit from './CRM-sistem/WindowEditor';
 import EditController from './CRM-sistem/EditController';
 
+const body = document.querySelector('body');
+const mainDiv = createLinks();
+body.append(mainDiv);
+
 export function createLinks() {
   // Создаем ссылки на наши задачи
   const main = document.createElement('main');
@@ -18,16 +22,7 @@ export function createLinks() {
   return main;
 }
 
-export function createButton(mainBlock) {
-  // Создаем кнопку возврата на главную страницу
-  const btn = document.createElement("button");
-  btn.textContent = "Return";
-  btn.classList.add("btn-return");
-  mainBlock.append(btn);
-  btn.addEventListener("click", (event) => onReturnClick(event));
-}
-
-function onReturnClick(event, title) {
+function onReturnClick() {
   // Обработчик события нажатия кнопки Return
   const body = document.querySelector('body');
   body.className = '';
@@ -36,9 +31,14 @@ function onReturnClick(event, title) {
   body.append(mainDiv);
 }
 
-const body = document.querySelector('body');
-const mainDiv = createLinks();
-body.append(mainDiv);
+export function createButton(mainBlock) {
+  // Создаем кнопку возврата на главную страницу
+  const btn = document.createElement('button');
+  btn.textContent = 'Return';
+  btn.classList.add('btn-return');
+  mainBlock.append(btn);
+  btn.addEventListener('click', (event) => onReturnClick(event));
+}
 
 function runTask1() {
   // Запуск задачи 1

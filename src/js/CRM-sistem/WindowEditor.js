@@ -1,49 +1,42 @@
 export default class WindowEdit {
   constructor() {
     this.conteiner = null;
-    this.conteinerCRM = null;
     this.inputTitle = null;
     this.inputPrice = null;
+    this.form = null;
     this.crossListeners = [];
     this.saveListeners = [];
     this.cancelListeners = [];
     this.iconEditListeners = [];
     this.iconDeleteListeners = [];
-    this.cellTable = null;
   }
 
   bindToDOM() {
     // Добавляет поле main к элементу body
-    const body = document.querySelector("body");
-    this._createMain();
+    const body = document.querySelector('body');
+    this.createMain();
     body.append(this.conteiner);
   }
 
-  _createMain() {
-    // Создает элемент main содержащий поле игры
-    const main = document.createElement("main");
-    main.classList.add("content");
+  createMain() {
+    // Создает элемент main содержащий весь контент
+    const main = document.createElement('main');
+    main.classList.add('content');
+    this.conteiner = main;
 
-    const conteiner = document.createElement("div");
-    conteiner.classList.add("conteiner-crm");
-    main.append(conteiner);
-
-    const conteinerTitle = document.createElement('div');
-    conteinerTitle.classList.add("conteiner-crm-title");
-    conteiner.append(conteinerTitle);
-
-    const title = document.createElement('div');
+    const conteiner = this.addHTMLBlockDiv(main, 'conteiner-crm');
+    const conteinerTitle = this.addHTMLBlockDiv(conteiner, 'conteiner-crm-title');
+    const title = this.addHTMLBlockDiv(conteinerTitle, 'crm_title');
     title.textContent = 'Товары';
-    conteinerTitle.append(title);
 
-    const cross = document.createElement('div');
+    const cross = this.addHTMLBlockDiv(conteinerTitle, 'crm_title__add');
     cross.textContent = '+';
-    cross.classList.add('crm_title__add');
     cross.addEventListener('click', (o) => this.onClickCross(o));
-    conteinerTitle.append(cross);
 
     const table = document.createElement('table');
-    table.classList.add('conteiner-table')
+    table.classList.add('conteiner-table');
+    conteiner.append(table);
+
     const tr = document.createElement('tr');
     table.append(tr);
 
@@ -53,71 +46,99 @@ export default class WindowEdit {
       th.textContent = name;
       tr.append(th);
     }
-    conteiner.append(table);
-    this.conteiner = main;
+  }
+
+  addHTMLBlockDiv(parent, className = null) {
+    // Создает блок DIV и добавляет к родителю
+    const div = document.createElement('div');
+    if (className) {
+      div.classList.add(className);
+    }
+    parent.append(div);
+    return div;
+  }
+
+  addHTMLBlockInput(parent, text, name) {
+    // Добавляет к родителю теги h3 и input
+    const title = document.createElement('h3');
+    title.textContent = text;
+    parent.append(title);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.setAttribute('name', name);
+    input.setAttribute('id', name);
+    input.setAttribute('required', '');
+    parent.append(input);
+    return input;
   }
 
   drawPopup() {
-    const conteiner = document.createElement('div');
-    conteiner.classList.add('conteiner-popup');
+    // Отрисовывает всплывающее окно при добавлении товара
+    const conteiner = this.addHTMLBlockDiv(this.conteiner, 'background-popup');
+    const popover = this.addHTMLBlockDiv(conteiner, 'conteiner-popup');
 
-    const popover = document.createElement('div');
-    popover.classList.add('conteiner-form');
-    conteiner.append(popover);
+    this.form = document.createElement('form');
+    this.form.classList.add('popup-form');
+    this.form.setAttribute('novalidate', '');
+    this.form.addEventListener('submit', (o) => this.onClickSave(o));
 
-    const form = document.createElement('form');
-    form.classList.add('popup-form');
-    popover.append(form);
+    popover.append(this.form);
 
-    const title = document.createElement('h3');
-    title.textContent = 'Название';
-    form.append(title);
+    this.inputTitle = this.addHTMLBlockInput(this.form, 'Название', 'title');
+    this.inputPrice = this.addHTMLBlockInput(this.form, 'Стоимость', 'price');
+    this.inputPrice.setAttribute('pattern', '^[1-9]\\d*');
 
-    this.inputTitle = document.createElement('input');
-    this.inputTitle.type = 'text';
-    form.append(this.inputTitle);
-
-    const price = document.createElement('h3');
-    price.textContent = 'Стоимость';
-    form.append(price);
-    
-    this.inputPrice = document.createElement('input');
-    this.inputPrice.type = 'text';
-    form.append(this.inputPrice);
-
-    const divButton = document.createElement('div');
-    divButton.classList.add('popup-buttons');
-    form.append(divButton);
+    const divButton = this.addHTMLBlockDiv(this.form, 'popup-buttons');
 
     const btnSave = document.createElement('button');
     btnSave.classList.add('button-save');
     btnSave.textContent = 'Сохранить';
-    btnSave.addEventListener('click', (o) => this.onClickSave(o));
+    btnSave.type = 'submit';
     divButton.append(btnSave);
 
     const btnCancel = document.createElement('button');
     btnCancel.classList.add('button-reject');
     btnCancel.textContent = 'Отмена';
+    btnCancel.type = 'reset';
     btnCancel.addEventListener('click', (o) => this.onClickCancel(o));
     divButton.append(btnCancel);
+  }
 
-    this.conteiner.append(conteiner)
+  deletePopup() {
+    // Удаляет всплывающее окно
+    const div = this.conteiner.querySelector('.background-popup');
+    div.remove();
+  }
+
+  drawPopupDelete() {
+    // Отрисовывает всплывающее окно при удалении товара
+    const conteiner = this.addHTMLBlockDiv(this.conteiner, 'background-popup');
+    const div = this.addHTMLBlockDiv(conteiner, 'popup-delete');
+
+    const span = document.createElement('span');
+    span.textContent = 'Товар удален';
+    div.append(span);
+
+    const cross = this.addHTMLBlockDiv(div, 'popup-delete__cross');
+    cross.addEventListener('click', () => conteiner.remove());
+
+    setTimeout(() => {
+      conteiner.remove();
+    }, 3000);
   }
 
   addActions() {
-    // Создание блока с иконками действий
+    // Создание блока с иконками действий для продукта
     const td = document.createElement('td');
     td.classList.add('product-actions');
 
-    const iconEdit = document.createElement('div');
-    iconEdit.classList.add('actions-edit');
+    const iconEdit = this.addHTMLBlockDiv(td, 'actions-edit');
     iconEdit.addEventListener('click', (o) => this.onClickIconEdit(o));
-    td.append(iconEdit);
 
-    const iconDelete = document.createElement('div');
-    iconDelete.classList.add('actions-delete');
+    const iconDelete = this.addHTMLBlockDiv(td, 'actions-delete');
+
     iconDelete.addEventListener('click', (o) => this.onClickIconDelete(o));
-    td.append(iconDelete)
     return td;
   }
 
@@ -130,25 +151,24 @@ export default class WindowEdit {
       item.remove();
     });
     for (const item of Object.entries(object)) {
-      console.log(item);
       const tr = document.createElement('tr');
       table.append(tr);
 
       const tdTitle = document.createElement('td');
       tdTitle.textContent = item[0];
       tr.append(tdTitle);
-  
+
       const tdPrice = document.createElement('td');
       tdPrice.textContent = item[1];
       tr.append(tdPrice);
-  
+
       const tdActions = this.addActions();
       tr.append(tdActions);
     }
   }
 
   onClickCross(event) {
-    event.preventDefault();
+    // Вызывает callback при нажатии крестика для добавления товара
     this.crossListeners.forEach((o) => o.call(null));
   }
 
@@ -157,6 +177,7 @@ export default class WindowEdit {
   }
 
   onClickSave(event) {
+    // Вызывает callback при нажатии кнокпи сохранить
     event.preventDefault();
     this.saveListeners.forEach((o) => o.call(null));
   }
@@ -166,6 +187,7 @@ export default class WindowEdit {
   }
 
   onClickCancel(event) {
+    // Вызывает callback при нажатии кнопки отменить
     event.preventDefault();
     this.cancelListeners.forEach((o) => o.call(null));
   }
@@ -176,8 +198,7 @@ export default class WindowEdit {
 
   onClickIconEdit(event) {
     // Вызывает callback для редактирования строки таблицы где нажата иконка
-    this.cellTable = event.target.closest('tr');
-    this.iconEditListeners.forEach((o) => o.call(null));
+    this.iconEditListeners.forEach((o) => o.call(null, event));
   }
 
   addIconEditListeners(callback) {
@@ -192,78 +213,4 @@ export default class WindowEdit {
   addIconDeleteListeners(callback) {
     this.iconDeleteListeners.push(callback);
   }
-
-  // _createButton(mainBlock) {
-  //   // Создаем кнопку возврата на главную страницу
-  //   const btn = document.createElement("button");
-  //   btn.textContent = "Return";
-  //   btn.classList.add("btn__return");
-  //   mainBlock.append(btn);
-  //   btn.addEventListener("click", (event) => this.onReturnClick(event));
-  // }
-
-  // onCellClick(event) {
-  //   // Запуск сохраненных callback из списка для текущего индекса
-  //   const index = this.cells.indexOf(event.currentTarget);
-  //   this.cellClickListeners.forEach((o) => o.call(null, index));
-  // }
-
-  // onResetClick(event) {
-  //   // Запуск callback для кнопки Reset
-  //   event.preventDefault();
-  //   this.resetListeners.forEach((o) => o.call(null));
-  // }
-
-  // onReturnClick(event) {
-  //   // Запуск callback для кнопки Return
-  //   event.preventDefault();
-  //   this.returnListeners.forEach((o) => o.call(null));
-  // }
-
-  // addCellClickListener(callback) {
-  //   // Сохранение переданных callback поля для дальнейшего их вызова
-  //   this.cellClickListeners.push(callback);
-  // }
-
-  // addResetListener(callback) {
-  //   // Сохранение переданных callback кнопки Reset для дальнейшего их вызова
-  //   this.resetListeners.push(callback);
-  // }
-
-  // addReturnListener(callback) {
-  //   // Сохранение переданных callback кнопки Return для дальнейшего их вызова
-  //   this.returnListeners.push(callback);
-  // }
-
-  // addStrike(index) {
-  //   // Добавляет блок с фоном показывающий попадание
-  //   const strikeDiv = document.createElement("div");
-  //   strikeDiv.classList.add("strike");
-  //   this.cells[index].append(strikeDiv);
-  // }
-
-  // removeStrike(element) {
-  //   // Удаляет блок показывающий попадание по цели
-  //   element.children[0].remove();
-  // }
-
-  // createPopup() {
-  //   // Создает popup для страницы
-  //   this.popup = document.createElement("div");
-  //   this.popup.classList.add("popup");
-  //   const div = document.createElement("div");
-  //   div.classList.add("popup_form");
-  //   div.textContent = "Конец игры";
-  //   const span = document.createElement("span");
-  //   this.spanResult = span;
-  //   div.append(span);
-  //   const btn = document.createElement("button");
-  //   btn.textContent = "Reset";
-  //   btn.classList.add("btn_reset");
-  //   div.append(btn);
-
-  //   btn.addEventListener("click", (event) => this.onResetClick(event));
-
-  //   this.popup.append(div);
-  // }
 }

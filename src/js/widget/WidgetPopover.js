@@ -1,5 +1,3 @@
-import { createButton, createLinks } from '../welcomePage';
-
 export default class WidgetPopover {
   constructor(parent) {
     this.parent = parent;
