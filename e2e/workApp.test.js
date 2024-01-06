@@ -1,7 +1,7 @@
 // Импорт библиотеки для работы с браузером
 import puppeteer from 'puppeteer';
 
-jest.setTimeout(30000); // default puppeteer timeout
+jest.setTimeout(20000); // default puppeteer timeout
 
 
 // Группируем тесты, так как тестам понадобится подготовка для запуска
@@ -28,46 +28,74 @@ describe('Page start', () => {
     await browser.close(); // Закрытие браузера после каждого теста
   });
 
-  it('Сценарий удаления продуктов из таблицы', async () => {
-    // переход страницы по url
-    // сервер уже должен быть запущен для данной страницы
-    await page.goto('http://localhost:9090');
+  // it('Сценарий удаления продуктов из таблицы', async () => {
+  //   const deleteProduct = async () => {
+  //     // Функция для поиска и нажатия иконки для удаления продуктов
+  //     let productDelete = await page.waitForSelector('.conteiner-table tr:last-child'); // Поиск последнего продукта в таблице
+  //     let element = await productDelete.$('td');
+  //     let value = await element.evaluate(el => el.textContent); // Получили название выбранного продукта
+  
+  //     let iconDelete = await productDelete.$('.actions-delete');
+  //     await iconDelete.hover(); // Навелись на иконку удаления продукта
+  //     await iconDelete.click(); // Нажали на иконку
+  
+  //     let result = await page.waitForSelector('.popup-delete'); // Ожидаем появления popup при удалении продукта
+  //     result = await result.$('span');
+  //     result = await result.evaluate(el => el.textContent); // Получили сообщение об удалении
+  //     console.log(result, ' - ', value); // Выводим в консоль информацию о удаленном товаре
+  //   };
 
-    // Страница ожидает загрузки селектора .content
+  //   // переход страницы по url
+  //   // сервер уже должен быть запущен для данной страницы
+  //   await page.goto('http://localhost:9090');
+
+  //   // Страница ожидает загрузки селектора .content
+  //   const button = await page.waitForSelector('.content a:nth-child(2)');
+  //   await button.click(); // нажали кнопку задачи 2
+
+  //   // Удаление первого продукта
+  //   await deleteProduct();
+  //   await page.waitForTimeout(4000); // Ожидаем закрытие popup по таймеру
+
+  //   // Удаление второго продукта
+  //   await deleteProduct();
+  //   const cross = await page.waitForSelector('.popup-delete__cross');
+  //   await cross.hover();
+  //   await cross.click(); // Нажали элемент закрытия popup
+  // });
+
+  it('Сценарий добавления продукта в таблицу', async () => {
+    await page.goto('http://localhost:9090');
     const button = await page.waitForSelector('.content a:nth-child(2)');
     await button.click(); // нажали кнопку задачи 2
 
-    // Удаление первого продукта
-    let productDelete = await page.waitForSelector('.conteiner-table tr:last-child'); // Поиск последнего продукта в таблице
-    let element = await productDelete.$('td');
-    let value = await element.evaluate(el => el.textContent); // Получили название выбранного продукта
+    const elementPlus = await page.waitForSelector('.crm_title__add');
+    await elementPlus.hover();
+    await elementPlus.click(); // Нажали элемент добавления товара
 
-    let iconDelete = await productDelete.$('.actions-delete');
-    await iconDelete.hover(); // Навелись на иконку удаления продукта
-    await iconDelete.click(); // Нажали на иконку
+    const btnSave = await page.waitForSelector('.button-save');
+    await btnSave.click(); // Нажали кнопку сохранить
 
-    let result = await page.waitForSelector('.popup-delete'); // Ожидаем появления popup при удалении продукта
-    result = await result.$('span');
-    result = await result.evaluate(el => el.textContent); // Получили сообщение об удалении
-    console.log(result, ' - ', value); // Выводим в консоль информацию о удаленном товаре
-    await page.waitForTimeout(4000); // Ожидаем закрытие popup по таймеру
+    const inputTitle = await page.waitForSelector('#title');
+    await inputTitle.hover();
+    await inputTitle.type('Acer E320'); // Ввод данных в поле инпут
+    await btnSave.click(); // Нажали кнопку сохранить
 
-    // Удаление второго продукта
-    productDelete = await page.waitForSelector('.conteiner-table tr:last-child'); // Поиск последнего продукта в таблице
-    element = await productDelete.$('td');
-    value = await element.evaluate(el => el.textContent); // Получили название выбранного продукта
+    const inputPrice = await page.waitForSelector('#price');
+    await inputPrice.hover();
+    await inputPrice.type('0'); // Ввод данных в поле инпут
+    await btnSave.click(); // Нажали кнопку сохранить
 
-    iconDelete = await productDelete.$('.actions-delete');
-    await iconDelete.hover(); // Навелись на иконку удаления продукта
-    await iconDelete.click(); // Нажали на иконку
+    await inputPrice.hover();
+    await inputPrice.press('Backspace'); // Удалили значение 0 из поля цены нажав 1 раз Backspace
+    await inputPrice.type('15000'); // Ввод новых данных в поле инпут
 
-    result = await page.waitForSelector('.popup-delete'); // Ожидаем появления popup при удалении продукта
-    result = await result.$('span');
-    result = await result.evaluate(el => el.textContent); // Получили сообщение об удалении
-    console.log(result, ' - ', value); // Выводим в консоль информацию о удаленном товаре
-    const cross = await page.waitForSelector('.popup-delete__cross');
-    await cross.hover();
-    await cross.click(); // Нажали элемент закрытия popup
+    await btnSave.focus();
+    await page.waitForTimeout(1000);
+    await btnSave.click(); // Нажали кнопку сохранить
+
+    await page.waitForSelector('.conteiner-table tr:nth-child(5)'); // Поиск нового продукта в таблице
+    await page.waitForTimeout(1000);
   });
 
   // it('test проверки ввода валидных данных', async () => {
