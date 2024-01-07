@@ -24,12 +24,12 @@ export default class WindowEdit {
     main.classList.add('content');
     this.conteiner = main;
 
-    const conteiner = this.addHTMLBlockDiv(main, 'conteiner-crm');
-    const conteinerTitle = this.addHTMLBlockDiv(conteiner, 'conteiner-crm-title');
-    const title = this.addHTMLBlockDiv(conteinerTitle, 'crm_title');
+    const conteiner = WindowEdit.addHTMLBlockDiv(main, 'conteiner-crm');
+    const conteinerTitle = WindowEdit.addHTMLBlockDiv(conteiner, 'conteiner-crm-title');
+    const title = WindowEdit.addHTMLBlockDiv(conteinerTitle, 'crm_title');
     title.textContent = 'Товары';
 
-    const cross = this.addHTMLBlockDiv(conteinerTitle, 'crm_title__add');
+    const cross = WindowEdit.addHTMLBlockDiv(conteinerTitle, 'crm_title__add');
     cross.textContent = '+';
     cross.addEventListener('click', (o) => this.onClickCross(o));
 
@@ -48,7 +48,7 @@ export default class WindowEdit {
     }
   }
 
-  addHTMLBlockDiv(parent, className = null) {
+  static addHTMLBlockDiv(parent, className = null) {
     // Создает блок DIV и добавляет к родителю
     const div = document.createElement('div');
     if (className) {
@@ -58,7 +58,7 @@ export default class WindowEdit {
     return div;
   }
 
-  addHTMLBlockInput(parent, text, name) {
+  static addHTMLBlockInput(parent, text, name) {
     // Добавляет к родителю теги h3 и input
     const title = document.createElement('h3');
     title.textContent = text;
@@ -75,8 +75,8 @@ export default class WindowEdit {
 
   drawPopup() {
     // Отрисовывает всплывающее окно при добавлении товара
-    const conteiner = this.addHTMLBlockDiv(this.conteiner, 'background-popup');
-    const popover = this.addHTMLBlockDiv(conteiner, 'conteiner-popup');
+    const conteiner = WindowEdit.addHTMLBlockDiv(this.conteiner, 'background-popup');
+    const popover = WindowEdit.addHTMLBlockDiv(conteiner, 'conteiner-popup');
 
     this.form = document.createElement('form');
     this.form.classList.add('popup-form');
@@ -85,11 +85,11 @@ export default class WindowEdit {
 
     popover.append(this.form);
 
-    this.inputTitle = this.addHTMLBlockInput(this.form, 'Название', 'title');
-    this.inputPrice = this.addHTMLBlockInput(this.form, 'Стоимость', 'price');
+    this.inputTitle = WindowEdit.addHTMLBlockInput(this.form, 'Название', 'title');
+    this.inputPrice = WindowEdit.addHTMLBlockInput(this.form, 'Стоимость', 'price');
     this.inputPrice.setAttribute('pattern', '^[1-9]\\d*');
 
-    const divButton = this.addHTMLBlockDiv(this.form, 'popup-buttons');
+    const divButton = WindowEdit.addHTMLBlockDiv(this.form, 'popup-buttons');
 
     const btnSave = document.createElement('button');
     btnSave.classList.add('button-save');
@@ -113,14 +113,14 @@ export default class WindowEdit {
 
   drawPopupDelete() {
     // Отрисовывает всплывающее окно при удалении товара
-    const conteiner = this.addHTMLBlockDiv(this.conteiner, 'background-popup');
-    const div = this.addHTMLBlockDiv(conteiner, 'popup-delete');
+    const conteiner = WindowEdit.addHTMLBlockDiv(this.conteiner, 'background-popup');
+    const div = WindowEdit.addHTMLBlockDiv(conteiner, 'popup-delete');
 
     const span = document.createElement('span');
     span.textContent = 'Товар удален';
     div.append(span);
 
-    const cross = this.addHTMLBlockDiv(div, 'popup-delete__cross');
+    const cross = WindowEdit.addHTMLBlockDiv(div, 'popup-delete__cross');
     cross.addEventListener('click', () => conteiner.remove());
 
     setTimeout(() => {
@@ -133,10 +133,10 @@ export default class WindowEdit {
     const td = document.createElement('td');
     td.classList.add('product-actions');
 
-    const iconEdit = this.addHTMLBlockDiv(td, 'actions-edit');
+    const iconEdit = WindowEdit.addHTMLBlockDiv(td, 'actions-edit');
     iconEdit.addEventListener('click', (o) => this.onClickIconEdit(o));
 
-    const iconDelete = this.addHTMLBlockDiv(td, 'actions-delete');
+    const iconDelete = WindowEdit.addHTMLBlockDiv(td, 'actions-delete');
 
     iconDelete.addEventListener('click', (o) => this.onClickIconDelete(o));
     return td;
@@ -155,11 +155,12 @@ export default class WindowEdit {
       table.append(tr);
 
       const tdTitle = document.createElement('td');
-      tdTitle.textContent = item[0];
+      const [textTtile, textPrice] = item;
+      tdTitle.textContent = textTtile;
       tr.append(tdTitle);
 
       const tdPrice = document.createElement('td');
-      tdPrice.textContent = item[1];
+      tdPrice.textContent = textPrice;
       tr.append(tdPrice);
 
       const tdActions = this.addActions();
@@ -167,7 +168,7 @@ export default class WindowEdit {
     }
   }
 
-  onClickCross(event) {
+  onClickCross() {
     // Вызывает callback при нажатии крестика для добавления товара
     this.crossListeners.forEach((o) => o.call(null));
   }

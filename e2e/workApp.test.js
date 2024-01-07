@@ -4,7 +4,6 @@ import { fork } from 'child_process';
 
 jest.setTimeout(30000); // default puppeteer timeout
 
-
 // Группируем тесты, так как тестам понадобится подготовка для запуска
 // браузера, его закрытие, переход на страницы и т.д.
 describe('Page start', () => {
@@ -45,17 +44,18 @@ describe('Page start', () => {
     const deleteProduct = async () => {
       // Функция для поиска и нажатия иконки для удаления продуктов
       // Возвращает название удаленного продукта
-      let productDelete = await page.waitForSelector('.conteiner-table tr:last-child'); // Поиск последнего продукта в таблице
-      let element = await productDelete.$('td');
-      let value = await element.evaluate(el => el.textContent); // Получили название выбранного продукта
-  
-      let iconDelete = await productDelete.$('.actions-delete');
+      const productDelete = await page.waitForSelector('.conteiner-table tr:last-child');
+      const element = await productDelete.$('td');
+      // Получаем название выбранного продукта
+      const value = await element.evaluate((el) => el.textContent);
+
+      const iconDelete = await productDelete.$('.actions-delete');
       await iconDelete.hover(); // Навелись на иконку удаления продукта
       await iconDelete.click(); // Нажали на иконку
-  
+
       let result = await page.waitForSelector('.popup-delete'); // Ожидаем появления popup при удалении продукта
       result = await result.$('span');
-      result = await result.evaluate(el => el.textContent); // Получили сообщение об удалении
+      result = await result.evaluate((el) => el.textContent); // Получили сообщение об удалении
       expect(result).toBe('Товар удален');
       return value;
     };
@@ -141,7 +141,7 @@ describe('Page start', () => {
 
     const popup = await page.$('.background-popup');
     expect(popup).toBeNull();
-    const listError = await page.$$('.form-error'); // Блоков с ошибками нет в HTML 
+    const listError = await page.$$('.form-error'); // Блоков с ошибками нет в HTML
     expect(listError.length).toBe(0);
   });
 
@@ -150,11 +150,11 @@ describe('Page start', () => {
     const button = await page.waitForSelector('.content a:nth-child(2)');
     await button.click(); // нажали кнопку задачи 2
 
-    let listProducts = await page.$$('.conteiner-table tr'); // Список всех строк в таблице
-    let listElements = await listProducts[2].$$('td'); // Получаем содержимое третьей строки 
+    const listProducts = await page.$$('.conteiner-table tr'); // Список всех строк в таблице
+    let listElements = await listProducts[2].$$('td'); // Получаем содержимое третьей строки
     const product = {
       name: await listElements[0].evaluate((el) => el.textContent),
-      price: await listElements[1].evaluate((el) => el.textContent)
+      price: await listElements[1].evaluate((el) => el.textContent),
     };
     expect(product.name).toBe('Samsung Galaxy S10+');
     expect(product.price).toBe('80000');
@@ -171,18 +171,22 @@ describe('Page start', () => {
     expect(popupProductPrice).toEqual(product.price);
 
     // Изменяем данные текущего продукта
+    /* eslint-disable no-await-in-loop */
     for (let i = 0; i < 12; i += 1) {
       await popupTitle.press('Backspace');
     }
+    /* eslint-enable no-await-in-loop */
     await popupPrice.type('567');
     const btnSave = await page.$('.button-save');
     await btnSave.click();
 
     // Проверяем, что в таблице данные изменились
-    let productEdit = await page.waitForSelector('.conteiner-table tr:last-child');
-    listElements = await productEdit.$$('td'); // Получаем содержимое обновленного продукта 
-    product.name = await listElements[0].evaluate((el) => el.textContent),
-    product.price = await listElements[1].evaluate((el) => el.textContent)
+    const productEdit = await page.waitForSelector('.conteiner-table tr:last-child');
+    listElements = await productEdit.$$('td'); // Получаем содержимое обновленного продукта
+    const name = await listElements[0].evaluate((el) => el.textContent);
+    product.name = name;
+    const price = await listElements[1].evaluate((el) => el.textContent);
+    product.price = price;
     expect(product.name).toBe('Samsung');
     expect(product.price).toBe('80000567');
   });

@@ -2,11 +2,7 @@ import WidgetPopover from './widget/WidgetPopover';
 import WindowEdit from './CRM-sistem/WindowEditor';
 import EditController from './CRM-sistem/EditController';
 
-const body = document.querySelector('body');
-const mainDiv = createLinks();
-body.append(mainDiv);
-
-export function createLinks() {
+function createLinks() {
   // Создаем ссылки на наши задачи
   const main = document.createElement('main');
   main.classList.add('content');
@@ -22,16 +18,18 @@ export function createLinks() {
   return main;
 }
 
+const body = document.querySelector('body');
+const mainDiv = createLinks();
+body.append(mainDiv);
+
 function onReturnClick() {
   // Обработчик события нажатия кнопки Return
-  const body = document.querySelector('body');
   body.className = '';
   body.innerHTML = '';
-  const mainDiv = createLinks();
   body.append(mainDiv);
 }
 
-export function createButton(mainBlock) {
+function createButton(mainBlock) {
   // Создаем кнопку возврата на главную страницу
   const btn = document.createElement('button');
   btn.textContent = 'Return';
@@ -40,9 +38,9 @@ export function createButton(mainBlock) {
   btn.addEventListener('click', (event) => onReturnClick(event));
 }
 
+/* eslint-disable no-use-before-define */
 function runTask1() {
   // Запуск задачи 1
-  const body = document.querySelector('body');
   body.innerHTML = '';
   body.classList.add('task-1');
   for (let i = 0; i < 3; i += 1) {
@@ -66,3 +64,4 @@ function runTask2() {
   controller.init();
   createButton(sistem.conteiner);
 }
+/* eslint-enable no-use-before-define */

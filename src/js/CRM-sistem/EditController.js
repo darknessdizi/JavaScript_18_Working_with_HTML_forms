@@ -1,4 +1,4 @@
-import { Tooltip } from './ToolTip';
+import Tooltip from './ToolTip';
 
 const errors = {
   title: {
@@ -8,7 +8,7 @@ const errors = {
     valueMissing: 'Определите стоимость товара!',
     patternMismatch: 'Допустимы только числа больше нуля!',
   },
-}
+};
 
 export default class EditController {
   constructor(editor) {
@@ -44,13 +44,13 @@ export default class EditController {
   }
 
   static getError(el) {
-    // Возвращает текст сообщения об ошибке 
+    // Возвращает текст сообщения об ошибке
     const errorKey = Object.keys(ValidityState.prototype).find((key) => {
-      if (!el.name) return;
-      if (key === 'valid') return;
+      if (!el.name) return false;
+      if (key === 'valid') return false;
       return el.validity[key];
     });
-    if (!errorKey) return;
+    if (!errorKey) return false;
     return errors[el.name][errorKey];
   }
 
@@ -58,7 +58,7 @@ export default class EditController {
     // Callback - Обработка события потери фокуса элементом
     const el = event.target;
     const error = EditController.getError(el);
-    const currentErrorMessage = this.actualMessages.find(item => item.name === el.name);
+    const currentErrorMessage = this.actualMessages.find((item) => item.name === el.name);
     if (currentErrorMessage) {
       this.toolTip.removeTooltip(currentErrorMessage.id);
       const index = this.actualMessages.indexOf(currentErrorMessage);
@@ -73,14 +73,15 @@ export default class EditController {
     // Callback - Обработка события нажатия на кнопку "Сохранить"
     this.actualMessages.forEach((message) => this.toolTip.removeTooltip(message.id));
     this.actualMessages = [];
-    const elements = this.edit.form.elements;
-    [...elements].some(elem => {
+    const { elements } = this.edit.form;
+    [...elements].some((elem) => {
       const error = EditController.getError(elem);
       if (error) {
         this.showTooltip(error, elem);
         elem.focus();
         return true;
       }
+      return false;
     });
     if (!this.edit.form.checkValidity()) {
       return;
@@ -110,7 +111,7 @@ export default class EditController {
   onClickCross() {
     // Callback - Обработка события нажатия на крестик для добавления товара
     this.edit.drawPopup();
-    [...this.edit.form.elements].forEach( el => el.addEventListener('focus', () => {
+    [...this.edit.form.elements].forEach((el) => el.addEventListener('focus', () => {
       // Назначаем (всем элементам при получении фокуса) обработчик потери фокуса
       // "Одноразовый"
       el.addEventListener('blur', this.elementOnBlur.bind(this), { once: true });

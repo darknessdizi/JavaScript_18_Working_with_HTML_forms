@@ -1,4 +1,4 @@
-export class Tooltip {
+export default class Tooltip {
   constructor() {
     this._tooltips = [];
   }
@@ -6,24 +6,25 @@ export class Tooltip {
   showTooltip(message, element) {
     // Показывает сообщение об ошибке
     const tooltipElement = document.createElement('DIV');
-    tooltipElement.classList.add('form-error')
+    tooltipElement.classList.add('form-error');
     tooltipElement.textContent = message;
     const id = performance.now();
     this._tooltips.push({
       id,
-      element: tooltipElement
-    })
+      element: tooltipElement,
+    });
     document.body.appendChild(tooltipElement);
     const { right, top } = element.getBoundingClientRect();
-    tooltipElement.style.left = right + 15 + 'px';
-    tooltipElement.style.top = top + element.offsetHeight / 2 - tooltipElement.offsetHeight / 2 + 'px';
+    tooltipElement.style.left = `${right + 15}px`;
+    const height = top + element.offsetHeight / 2 - tooltipElement.offsetHeight / 2;
+    tooltipElement.style.top = `${height}px`;
     return id;
   }
 
   removeTooltip(id) {
     // Удаляет сообщение об ошибке
-    const tooltip = this._tooltips.find(t => t.id === id);
+    const tooltip = this._tooltips.find((t) => t.id === id);
     tooltip.element.remove();
-    this._tooltips = this._tooltips.filter(t => t.id !== id);
+    this._tooltips = this._tooltips.filter((t) => t.id !== id);
   }
 }
