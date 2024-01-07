@@ -38,7 +38,6 @@ function createButton(mainBlock) {
   btn.addEventListener('click', (event) => onReturnClick(event));
 }
 
-/* eslint-disable no-use-before-define */
 function runTask1() {
   // Запуск задачи 1
   body.innerHTML = '';
@@ -64,4 +63,3 @@ function runTask2() {
   controller.init();
   createButton(sistem.conteiner);
 }
-/* eslint-enable no-use-before-define */
